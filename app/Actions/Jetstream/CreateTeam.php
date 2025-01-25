@@ -26,12 +26,12 @@ class CreateTeam implements CreatesTeams
         ])->validateWithBag('createTeam');
 
         AddingTeam::dispatch($user);
-
-        $user->switchTeam($team = $user->ownedTeams()->create([
+        /** @var Team $team */
+        $team = $user->ownedTeams()->create([
             'name' => $input['name'],
             'personal_team' => false,
-        ]));
+        ]);
 
-        return $team;
+        return Team::findOrFail($team->id);
     }
 }

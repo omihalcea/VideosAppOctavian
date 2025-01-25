@@ -4,7 +4,6 @@ namespace App\Actions\Jetstream;
 
 use App\Models\Team;
 use App\Models\User;
-use Closure;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
@@ -29,10 +28,18 @@ class InviteTeamMember implements InvitesTeamMembers
 
         InvitingTeamMember::dispatch($team, $email, $role);
 
-        $invitation = $team->teamInvitations()->create([
-            'email' => $email,
-            'role' => $role,
-        ]);
+        // Crea la invitació i assegura que retorna el model correcte
+        $invitation = tap(
+            $team->teamInvitations()->create([
+                'email' => $email,
+                'role' => $role,
+            ])
+        )->refresh();
+
+        // Envia el correu amb el model d'invitació correcte
+        if (!$invitation instanceof \Laravel\Jetstream\TeamInvitation) {
+            throw new \LogicException('L\'objecte no és del tipus TeamInvitation');
+        }
 
         Mail::to($email)->send(new TeamInvitation($invitation));
     }
@@ -67,15 +74,15 @@ class InviteTeamMember implements InvitesTeamMembers
                 }),
             ],
             'role' => Jetstream::hasRoles()
-                            ? ['required', 'string', new Role]
-                            : null,
+                ? ['required', 'string', new Role]
+                : null,
         ]);
     }
 
     /**
      * Ensure that the user is not already on the team.
      */
-    protected function ensureUserIsNotAlreadyOnTeam(Team $team, string $email): Closure
+    protected function ensureUserIsNotAlreadyOnTeam(Team $team, string $email): \Closure
     {
         return function ($validator) use ($team, $email) {
             $validator->errors()->addIf(

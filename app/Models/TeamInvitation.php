@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use AllowDynamicProperties;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\TeamInvitation as JetstreamTeamInvitation;
 
+#[AllowDynamicProperties]
 class TeamInvitation extends JetstreamTeamInvitation
 {
     /**
@@ -14,6 +16,7 @@ class TeamInvitation extends JetstreamTeamInvitation
      * @var array<int, string>
      */
     protected $fillable = [
+        'team_id',
         'email',
         'role',
     ];
@@ -23,6 +26,6 @@ class TeamInvitation extends JetstreamTeamInvitation
      */
     public function team(): BelongsTo
     {
-        return $this->belongsTo(Jetstream::teamModel());
+        return $this->belongsTo(Team::class);
     }
 }
