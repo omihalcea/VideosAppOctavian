@@ -1,6 +1,4 @@
-# Terms of Service
-
-## Sobre el Projecte
+## Sobre el Projecte (Sprint 2)
 Aquest projecte consisteix a crear una plataforma on es poden gestionar vídeos. Els usuaris poden veure'ls, gestionar-los i buscar-ne informació. He utilitzat Laravel, que és una eina moderna per treballar amb dades, bases de dades i dissenyar aplicacions web.
 
 ## Creació del Projecte
@@ -41,3 +39,55 @@ En el segon sprint, vam afegir funcionalitats i millores:
 4. **Integració:**
     - Es van configurar les rutes per accedir a les funcionalitats principals.
     - Els helpers, models i controladors estan connectats entre ells per funcionar correctament.
+
+## Sobre el projecte (Sprint 3)
+
+1. **Base de Dades i Migracions**
+
+- Creada una **migració** per afegir el camp `super_admin` a la taula `users`.
+- Afegida la relació entre **rols i permisos** a la taula `role_has_permissions`.
+- Configurats els **usuaris per defecte** amb els seus permisos corresponents al `DatabaseSeeder`.
+
+2. **Model d'Usuaris**
+
+- Afegides les funcions:
+    - `testedBy()`: gestiona qui ha testejat l'usuari.
+    - `isSuperAdmin()`: verifica si un usuari és **super administrador**.
+
+3. **Helpers i Creació d'Usuaris**
+
+- Refactoritzada la creació d'usuaris en funcions separades:
+    - `create_regular_user()`
+    - `create_video_manager_user()`
+    - `create_superadmin_user()`
+- Creada la funció `add_personal_team()` per gestionar la creació d'equips.
+
+4. **Polítiques i Gates d'Accés**
+
+- Definides les **portes d'accés (Gates)** a `AppServiceProvider`.
+- Assignats permisos a cada rol a `DatabaseSeeder`.
+
+5. **Testing**
+
+- Creat el test `VideosManageControllerTest` a `tests/Feature/Videos` amb les funcions:
+    - `user_with_permissions_can_manage_videos()`
+    - `regular_users_cannot_manage_videos()`
+    - `guest_users_cannot_manage_videos()`
+    - `superadmins_can_manage_videos()`
+    - `loginAsVideoManager()`
+    - `loginAsSuperAdmin()`
+    - `loginAsRegularUser()`
+
+### **Correcció d'Errors**
+
+- **Error `RoleDoesNotExist`**: solucionat assegurant que els rols es creen abans d’assignar-los.
+- **Error `MissingAppKeyException`**: solucionat generant una nova `APP_KEY` i esborrant la memòria cau de Laravel.
+- **Error `RouteNotFoundException`**: corregida la ruta `videos.show` passant un `id` vàlid.
+- **Error `Integrity constraint violation`**: assegurada la creació de vídeos amb tots els camps requerits.
+
+## **Properes Millores**
+
+- Revisar l'assignació de permisos i garantir que tots els usuaris tenen els accessos correctes.
+- Afegir més proves unitàries i d'integració per a cobrir tots els casos d’ús.
+
+_Aquest document resumeix les principals accions realitzades en el projecte._

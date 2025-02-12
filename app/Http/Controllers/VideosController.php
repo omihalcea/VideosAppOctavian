@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Tests\Unit\VideosTest;
 
-class VideosController extends Controller
+class VideosController extends Controller // Assegura't que estén Controller
 {
     protected function testedBy()
     {
-        $videos = Video::all();
-        return response()->json($videos);
+        return VideosTest::class;
     }
+
     /**
      * Mostrar un vídeo específic.
      *
@@ -25,5 +26,14 @@ class VideosController extends Controller
 
         // Retornar la vista amb el vídeo
         return view('videos.show', compact('video'));
+    }
+
+    public function manage()
+    {
+        // Obtenir tots els vídeos
+        $videos = Video::all();
+
+        // Retornar la vista de gestió de vídeos
+        return view('videos.manage', compact('videos'));
     }
 }

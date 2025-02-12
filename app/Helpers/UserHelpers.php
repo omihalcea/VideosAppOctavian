@@ -4,52 +4,66 @@ namespace App\Helpers;
 
 use App\Models\Team;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class UserHelpers extends TestCase
 {
-    public static function createUsers()
+    public static function add_personal_team(User $user)
     {
-        $userData = config('users.user');
-        $profData = config('users.professor');
-        $teamuserData = config('team.user_team');
-        $teamprofData = config('team.professor_team');
+        return Team::create([
+            'user_id' => $user->id,
+            'name' => "{$user->name}'s Team",
+            'personal_team' => true,
+        ]);
+    }
 
+    public static function create_regular_user()
+    {
         $user = User::create([
-            'id' => $userData['id'],
-            'name' => $userData['name'],
-            'email' => $userData['email'],
-            'password' => $userData['password'],
-            'current_team_id' => $userData['current_team_id'],
+            'name' => 'Regular',
+            'email' => 'regular@videosapp.com',
+            'password' => bcrypt('123456789'),
+            'current_team_id' => null,
         ]);
 
-        $professor = User::create([
-            'id' => $profData['id'],
-            'name' => $profData['name'],
-            'email' => $profData['email'],
-            'password' => $profData['password'],
-            'current_team_id' => $profData['current_team_id'],
+        $team = self::add_personal_team($user);
+        $user->update(['current_team_id' => $team->id]);
+
+        return $user;
+    }
+
+    public static function create_video_manager_user()
+    {
+        $user = User::create([
+            'name' => 'Video Manager',
+            'email' => 'videosmanager@videosapp.com',
+            'password' => bcrypt('123456789'),
+            'current_team_id' => null,
         ]);
 
-        $teamuser = Team::create([
-            'id' => $teamuserData['id'],
-            'user_id' => $teamuserData['user_id'],
-            'name' => $teamuserData['name'],
-            'personal_team' => $teamuserData['personal_team'],
-        ]);
+        $team = self::add_personal_team($user);
+        $user->update(['current_team_id' => $team->id]);
 
-        $teamprof = Team::create([
-            'id' => $teamprofData['id'],
-            'user_id' => $teamprofData['user_id'],
-            'name' => $teamprofData['name'],
-            'personal_team' => $teamprofData['personal_team'],
-        ]);
+        return $user;
+    }
 
-        return [
-            'user' => $user,
-            'professor' => $professor,
-            'teamuser' => $teamuser,
-            'teamprof' => $teamprof,
-        ];
+    public static function create_superadmin_user()
+    {
+        $user = User::create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@videosapp.com',
+            'password' => bcrypt('123456789'),
+            'super_admin' => true,
+        ]);
+        self::add_personal_team($user);
+        return $user;
+    }
+
+    public static function create_permissions()
+    {
+        Permission::firstOrCreate(['name' => 'manage-videos']);
+        Permission::firstOrCreate(['name' => 'manage-users']);
     }
 }

@@ -7,6 +7,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/videos/manage', [VideosController::class, 'manage'])
+    ->middleware(['auth', 'can:manage-videos'])
+    ->name('videos.manage');
+
 Route::get('/videos/{id}', [VideosController::class, 'show'])->name('videos.show');
 
 Route::middleware([
