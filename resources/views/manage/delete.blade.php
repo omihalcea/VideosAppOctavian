@@ -1,0 +1,20 @@
+@extends('layouts.video-manager')
+
+@section('content')
+    <div class="container">
+        <h1>Eliminar Vídeo</h1>
+
+        @can('manage_videos')
+            <p>Estàs segur que vols eliminar el vídeo: <strong data-qa="video-title">{{ $video->title }}</strong>?</p>
+
+            <form action="{{ route('videos.destroy', $video->id) }}" method="POST" data-qa="form-delete-video">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger" data-qa="btn-confirm-delete-video">Eliminar</button>
+                <a href="{{ route('videos.index') }}" class="btn btn-secondary" data-qa="btn-cancel-delete-video">Cancel·lar</a>
+            </form>
+        @else
+            <p>No tens permís per eliminar aquest vídeo.</p>
+        @endcan
+    </div>
+@endsection

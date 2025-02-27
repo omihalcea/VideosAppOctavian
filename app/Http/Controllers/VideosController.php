@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Tests\Unit\VideosTest;
 
 class VideosController extends Controller // Assegura't que estén Controller
@@ -14,10 +15,25 @@ class VideosController extends Controller // Assegura't que estén Controller
     }
 
     /**
+     * Mostrar la llista de tots els vídeos.
+     *
+     * @return View
+     */
+    public function index()
+    {
+        // Obtenir tots els vídeos de la base de dades
+        $videos = Video::all();
+
+        // Retornar la vista amb la llista de vídeos
+        return view('manage.index', compact('videos'));
+    }
+
+
+    /**
      * Mostrar un vídeo específic.
      *
      * @param int $id
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function show($id)
     {
