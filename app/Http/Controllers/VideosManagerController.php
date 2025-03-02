@@ -4,50 +4,63 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class VideosManagerController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    public function testedBy()
-    {
-        return response()->json(['tested_by' => 'VideosManageController']);
-    }
-
     public function index()
     {
         $videos = Video::all();
-        return view('videos.index', compact('videos'));
+        return view('manage.index', compact('videos')); // Canviat per la vista correcta
+    }
+
+    public function create()
+    {
+        return view('manage.create'); // Afegida funció per a la vista de creació
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
             'url' => 'required|url',
         ]);
 
-        $video = Video::create($request->all());
+        // Obtenir l'últim vídeo (si n'hi ha)
+        $lastVideo = Video::orderBy('id', 'desc')->first();
 
-        return redirect()->route('videos.index')->with('success', 'Vídeo creat correctament.');
+        // Crear el nou vídeo
+        $video = Video::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'url' => $request->url,
+            'published_at' => now(), // Assignar automàticament la data de publicació
+            'previous' => $lastVideo ? $lastVideo->id : null, // Assignar el vídeo anterior
+            'next' => null, // De moment, no té següent vídeo
+        ]);
+
+        // Actualitzar el camp 'next' del vídeo anterior (si n'hi havia)
+        if ($lastVideo) {
+            $lastVideo->update(['next' => $video->id]);
+        }
+
+        return redirect()->route('manage.index')->with('success', 'Vídeo afegit correctament.');
     }
+
 
     public function show(Video $video)
     {
         return view('videos.show', compact('video'));
     }
 
-    public function edit(Video $video)
+    public function edit($id)
     {
-        return view('videos.edit', compact('video'));
+        $video = Video::findOrFail($id);
+        $videos = Video::orderBy('id', 'asc')->get();
+        return view('manage.edit', compact('video', 'videos'));
     }
 
-    public function update(Request $request, Video $video)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'title' => 'required|string|max:255',
@@ -55,20 +68,27 @@ class VideosManagerController extends Controller
             'url' => 'required|url',
         ]);
 
-        $video->update($request->all());
+        $video = Video::findOrFail($id);
 
-        return redirect()->route('videos.index')->with('success', 'Vídeo actualitzat correctament.');
+        // Actualitzar dades del vídeo
+        $video->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'url' => $request->url,
+        ]);
+
+        return redirect()->route('manage.index')->with('success', 'Vídeo actualitzat correctament.');
     }
 
     public function delete(Video $video)
     {
-        return view('videos.delete', compact('video'));
+        return view('manage.delete', compact('video'));
     }
 
     public function destroy(Video $video)
     {
         $video->delete();
 
-        return redirect()->route('videos.index')->with('success', 'Vídeo eliminat correctament.');
+        return redirect()->route('manage.index')->with('success', 'Vídeo eliminat correctament.');
     }
 }

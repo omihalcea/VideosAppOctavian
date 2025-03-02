@@ -25,7 +25,7 @@ class VideosController extends Controller // Assegura't que estén Controller
         $videos = Video::all();
 
         // Retornar la vista amb la llista de vídeos
-        return view('manage.index', compact('videos'));
+        return view('videos.index', compact('videos'));
     }
 
 

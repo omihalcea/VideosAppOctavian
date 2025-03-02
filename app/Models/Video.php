@@ -63,4 +63,15 @@ class Video extends Model
     {
         return Carbon::parse($this->published_at)->timestamp;
     }
+
+    public function getThumbnailUrlAttribute()
+    {
+        preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $this->url, $matches);
+
+        if (!empty($matches[1])) {
+            return "https://img.youtube.com/vi/{$matches[1]}/hqdefault.jpg";
+        }
+
+        return asset('images/default-thumbnail.jpg'); // Miniatura per defecte
+    }
 }

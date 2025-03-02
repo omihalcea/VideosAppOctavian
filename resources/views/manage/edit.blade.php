@@ -5,12 +5,20 @@
         <h1>Editar Vídeo</h1>
 
         @can('manage_videos')
-            <form action="{{ route('videos.update', $video->id) }}" method="POST" data-qa="form-edit-video">
+            <form action="{{ route('manage.update', $video->id) }}" method="POST" data-qa="form-edit-video">
                 @csrf
                 @method('PUT')
                 <div class="form-group">
                     <label for="title">Títol</label>
                     <input type="text" name="title" class="form-control" value="{{ $video->title }}" required data-qa="input-edit-video-title">
+                </div>
+                <div class="form-group">
+                    <label for="description">Descripció</label>
+                    <textarea name="description" class="form-control" required data-qa="input-edit-video-description">{{ $video->description }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="url">URL</label>
+                    <input type="url" name="url" class="form-control" value="{{ $video->url }}" required data-qa="input-edit-video-url">
                 </div>
                 <button type="submit" class="btn btn-primary mt-3" data-qa="btn-submit-edit-video">Actualitzar</button>
             </form>
@@ -22,20 +30,20 @@
         <table class="table" data-qa="videos-table">
             <thead>
             <tr>
-                <th>ID</th>
+                <th>Miniatura</th>
                 <th>Títol</th>
                 <th>Accions</th>
             </tr>
             </thead>
             <tbody>
-            @foreach($videos as $video)
+            @foreach($videos as $v)
                 <tr>
-                    <td data-qa="video-id">{{ $video->id }}</td>
-                    <td data-qa="video-title">{{ $video->title }}</td>
+                    <td><img src="{{ $v->thumbnail_url }}" alt="{{ $v->title }}" class="img-thumbnail" width="100" data-qa="video-thumbnail"></td>
+                    <td data-qa="video-title">{{ $v->title }}</td>
                     <td>
                         @can('manage_videos')
-                            <a href="{{ route('videos.edit', $video->id) }}" class="btn btn-sm btn-warning" data-qa="btn-edit-video">Editar</a>
-                            <a href="{{ route('videos.delete', $video->id) }}" class="btn btn-sm btn-danger" data-qa="btn-delete-video">Eliminar</a>
+                            <a href="{{ route('manage.edit', $v->id) }}" class="btn btn-sm btn-warning" data-qa="btn-edit-video">Editar</a>
+                            <a href="{{ route('manage.delete', $video->id) }}" class="btn btn-danger btn-sm" data-qa="btn-delete-video">Eliminar</a>
                         @endcan
                     </td>
                 </tr>

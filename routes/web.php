@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\VideosController;
+use App\Http\Controllers\VideosManagerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,15 +20,16 @@ Route::middleware([
     })->name('dashboard');
 });
 
-// Grup de rutes protegides per autenticació i permisos
+// Grup de rutes protegides per autenticació i permisos per a la gestió de vídeos
 Route::middleware(['auth'])->group(function () {
-    Route::prefix('videos/manage')->group(function () {
-        Route::get('/', [VideosController::class, 'manage'])->name('videos.manage')->middleware('can:manage_videos');
-        Route::get('/create', [VideosController::class, 'create'])->name('manage.create')->middleware('can:manage_videos');
-        Route::post('/', [VideosController::class, 'store'])->name('manage.store')->middleware('can:manage_videos');
-        Route::get('/{video}/edit', [VideosController::class, 'edit'])->name('manage.edit')->middleware('can:manage_videos');
-        Route::put('/{video}', [VideosController::class, 'update'])->name('manage.update')->middleware('can:manage_videos');
-        Route::delete('/{video}', [VideosController::class, 'destroy'])->name('manage.destroy')->middleware('can:manage_videos');
+    Route::prefix('videos/manage')->middleware('can:manage_videos')->group(function () {
+        Route::get('/', [VideosManagerController::class, 'index'])->name('manage.index');
+        Route::get('/create', [VideosManagerController::class, 'create'])->name('manage.create');
+        Route::post('/', [VideosManagerController::class, 'store'])->name('manage.store');
+        Route::get('/{video}/edit', [VideosManagerController::class, 'edit'])->name('manage.edit');
+        Route::get('/{video}/delete', [VideosManagerController::class, 'delete'])->name('manage.delete');
+        Route::put('/{video}', [VideosManagerController::class, 'update'])->name('manage.update');
+        Route::delete('/{video}', [VideosManagerController::class, 'destroy'])->name('manage.destroy');
     });
 });
 
