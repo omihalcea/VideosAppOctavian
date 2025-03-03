@@ -90,4 +90,85 @@ En el segon sprint, vam afegir funcionalitats i millores:
 - Revisar l'assignació de permisos i garantir que tots els usuaris tenen els accessos correctes.
 - Afegir més proves unitàries i d'integració per a cobrir tots els casos d’ús.
 
-_Aquest document resumeix les principals accions realitzades en el projecte._
+# Sobre el projecte (Sprint 4)
+
+## 📌 Funcionalitats Implementades
+
+### 🔹 **VideosManageController**
+S'ha creat el controlador `VideosManageController` amb les següents funcions:
+- `testedby`
+- `index`
+- `store`
+- `show`
+- `edit`
+- `update`
+- `delete`
+- `destroy`
+
+### 🔹 **VideosController**
+S'ha creat la funció `index` per mostrar tots els vídeos disponibles.
+
+### 🔹 **Seeder i Helpers**
+- S'han creat 3 vídeos de prova i s'han afegit al `DatabaseSeeder`.
+
+### 🔹 **Vistes per al CRUD de Vídeos** (Només accessibles per usuaris amb permisos)
+- `resources/views/videos/manage/index.blade.php`
+- `resources/views/videos/manage/create.blade.php`
+- `resources/views/videos/manage/edit.blade.php`
+- `resources/views/videos/manage/delete.blade.php`
+
+### 🔹 **Modificacions a les Vistes**
+- **`index.blade.php`**: Afegida la taula per gestionar els vídeos.
+- **`create.blade.php`**: Afegit el formulari per crear vídeos, utilitzant `data-qa` per facilitar els tests.
+- **`edit.blade.php`**: Afegida la taula per editar els vídeos.
+- **`delete.blade.php`**: Afegida la confirmació d'eliminació d'un vídeo.
+
+### 🔹 **Vista Pública de Vídeos**
+- `resources/views/videos/index.blade.php`: Mostra tots els vídeos en una interfície semblant a YouTube.
+- En clicar un vídeo, es redirigeix al detall (`show`).
+
+## 🛠 **Tests Implementats**
+### 🔹 **Modificació de Testos Existents**
+- `user_with_permissions_can_manage_videos()`: Ara inclou 3 vídeos.
+
+### 🔹 **Helpers per Permisos de Vídeos**
+- S'han creat permisos específics per al CRUD de vídeos.
+- Assignació de permisos als rols corresponents.
+
+### 🔹 **Tests a `VideoTest`**
+- `user_without_permissions_can_see_default_videos_page`
+- `user_with_permissions_can_see_default_videos_page`
+- `not_logged_users_can_see_default_videos_page`
+
+### 🔹 **Tests a `VideosManageControllerTest`**
+- `loginAsVideoManager`
+- `loginAsSuperAdmin`
+- `loginAsRegularUser`
+- `user_with_permissions_can_see_add_videos`
+- `user_without_videos_manage_create_cannot_see_add_videos`
+- `user_with_permissions_can_store_videos`
+- `user_without_permissions_cannot_store_videos`
+- `user_with_permissions_can_destroy_videos`
+- `user_without_permissions_cannot_destroy_videos`
+- `user_with_permissions_can_see_edit_videos`
+- `user_without_permissions_cannot_see_edit_videos`
+- `user_with_permissions_can_update_videos`
+- `user_without_permissions_cannot_update_videos`
+- `user_with_permissions_can_manage_videos`
+- `regular_users_cannot_manage_videos`
+- `guest_users_cannot_manage_videos`
+- `superadmins_can_manage_videos`
+
+## 🚀 **Rutes Implementades**
+- Rutes de `videos/manage` per al CRUD de vídeos, amb middleware adequat.
+- La ruta d'índex és accessible tant per usuaris loguejats com per convidats.
+
+## 🎨 **Disseny i Navegació**
+- S'han afegit `navbar` i `footer` a la plantilla `resources/layouts/videosapp`.
+- Es pot navegar entre pàgines fàcilment.
+
+## 📜 **Documentació Markdown**
+- Afegida informació de l’sprint a `resources/markdown/terms.md`.
+
+## 🛡 **Verificació de Codi**
+- Tots els fitxers nous han estat revisats amb **Larastan** per garantir qualitat i seguretat del codi.

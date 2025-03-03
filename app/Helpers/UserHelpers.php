@@ -6,6 +6,7 @@ use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class UserHelpers extends TestCase
@@ -45,6 +46,11 @@ class UserHelpers extends TestCase
 
         $team = self::add_personal_team($user);
         $user->update(['current_team_id' => $team->id]);
+
+        // Assignem el rol i permisos
+        $videoManagerRole = Role::firstOrCreate(['name' => 'video_manager']);
+        $user->assignRole($videoManagerRole);
+
 
         return $user;
     }

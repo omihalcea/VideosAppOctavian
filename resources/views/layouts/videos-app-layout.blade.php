@@ -6,9 +6,26 @@
     <title>Detalls del Vídeo</title>
 </head>
 <body>
+
+<!-- Navbar -->
+<header class="bg-green-600 text-white">
+    <div class="container head-cont mx-auto px-4 py-3 flex justify-between items-center">
+        <a href="{{ route('videos.index') }}" class="text-xl font-bold">VideosApp</a>
+        <nav class="space-x-4">
+            <a href="{{ route('videos.index') }}" class="hover:text-gray-200">Inici</a>
+            <a href="{{ route('manage.create') }}" class="hover:text-gray-200">Afegir Vídeo</a>
+            <a href="{{ route('manage.index') }}" class="hover:text-gray-200">Gestió</a>
+        </nav>
+    </div>
+</header>
 <main>
     {{ $slot }}
 </main>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white text-center py-4">
+    <p>&copy; {{ date('Y') }} VideosApp. Tots els drets reservats.</p>
+</footer>
 </body>
 <style>
     body {
@@ -58,11 +75,13 @@
         max-width: 100%;
         border-radius: 8px;
     }
+
     .links {
         margin-top: 20px;
         display: flex;
         justify-content: space-between;
     }
+
     .links a {
         background-color: #4CAF50;
         color: white;
@@ -70,8 +89,54 @@
         border-radius: 4px;
         text-decoration: none;
     }
+
     .links a:hover {
         background-color: #45a049;
+    }
+
+    header {
+        background-color: #4CAF50;
+        color: green;
+        padding: 20px;
+        text-align: center;
+    }
+
+    header .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    header a {
+        color: white;
+        text-decoration: none;
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    header nav a {
+        margin-left: 20px;
+        color: white;
+        text-decoration: none;
+    }
+
+    header nav a:hover {
+        color: #ddd;
+    }
+
+    .head-cont a {
+        color: #4CAF50;
+        text-decoration: none;
+    }
+
+    footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 20px;
     }
 </style>
 </html>

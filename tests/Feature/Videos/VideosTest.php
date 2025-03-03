@@ -2,14 +2,25 @@
 
 namespace Tests\Feature\Videos;
 
+use App\Models\User;
 use App\Models\Video;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class VideosTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Crear permisos abans d'executar els tests
+        Permission::firstOrCreate(['name' => 'manage-videos']);
+    }
+
 
     /**
      * Comprova que els usuaris poden veure vídeos existents.
@@ -49,5 +60,43 @@ class VideosTest extends TestCase
 
         // Comprovar que la resposta és 404 Not Found
         $response->assertStatus(404);
+    }
+
+    /**
+     * Comprova que un usuari sense permisos pot veure la pàgina de vídeos per defecte.
+     */
+    public function test_user_without_permissions_can_see_default_videos_page()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('videos.index'));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('videos.index');
+    }
+
+    /**
+     * Comprova que un usuari amb permisos pot veure la pàgina de vídeos per defecte.
+     */
+    public function test_user_with_permissions_can_see_default_videos_page()
+    {
+        $user = User::factory()->create();
+        $user->givePermissionTo('manage-videos');
+
+        $response = $this->actingAs($user)->get(route('videos.index'));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('videos.index');
+    }
+
+    /**
+     * Comprova que un usuari no loguejat pot veure la pàgina de vídeos per defecte.
+     */
+    public function test_not_logged_users_can_see_default_videos_page()
+    {
+        $response = $this->get(route('videos.index'));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('videos.index');
     }
 }
