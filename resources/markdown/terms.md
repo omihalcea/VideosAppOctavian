@@ -172,3 +172,87 @@ S'ha creat la funció `index` per mostrar tots els vídeos disponibles.
 
 ## 🛡 **Verificació de Codi**
 - Tots els fitxers nous han estat revisats amb **Larastan** per garantir qualitat i seguretat del codi.
+
+
+# Sprint 5
+
+## 📌 Funcionalitats Implementades
+
+### 🔹 **UsersController**
+S'ha creat el controlador `UsersManageController` amb les següents funcions:
+- `index`
+- `show`
+
+### 🔹 **UsersManageController**
+S'ha creat el controlador `UsersManageController` amb les següents funcions:
+- `index`
+- `create`
+- `store`
+- `edit`
+- `update`
+- `delete`
+- `destroy`
+
+### 🔹 **Permisos i Autenticació**
+- S'ha implementat la gestió de permisos amb **Spatie Permissions**.
+- S'han definit rols: `super-admin`, `video-manager`, `regular-user`.
+- Assignació de permisos:
+    - `manage_users` per gestionar usuaris.
+
+### 🔹 **Seeder i Helpers**
+- S'han creat 3 usuaris de prova amb rols assignats automàticament.
+- S'ha actualitzat el `DatabaseSeeder` per incloure permisos específics.
+
+### 🔹 **Vistes per al llistat d'Usuaris** (Accessibles per tots els usuaris)
+- `resources/views/users/manage/index.blade.php`
+- `resources/views/users/manage/show.blade.php`
+
+### 🔹 **Vistes per al CRUD d'Usuaris** (Només accessibles per usuaris amb permisos)
+- `resources/views/users/manage/index.blade.php`
+- `resources/views/users/manage/create.blade.php`
+- `resources/views/users/manage/edit.blade.php`
+- `resources/views/users/manage/delete.blade.php`
+
+### 🔹 **Modificacions a les Vistes**
+- **`index.blade.php`**: Llistat d'usuaris amb botons per editar i eliminar.
+- **`create.blade.php`**: Formulari per afegir nous usuaris.
+- **`edit.blade.php`**: Formulari per modificar dades d'un usuari.
+- **`delete.blade.php`**: Confirmació per eliminar un usuari.
+
+### 🔹 **Vista Pública d'Usuaris**
+- `resources/views/users/index.blade.php`: Mostra tots els usuaris visibles segons permisos.
+
+## 🛠 **Tests Implementats**
+### 🔹 **Modificació de Testos Existents**
+- `user_with_permissions_can_manage_users()`: Ara inclou 3 usuaris de prova.
+
+### 🔹 **Tests a `UsersManageControllerTest`**
+- `loginAsSuperAdmin`
+- `loginAsUserManager`
+- `loginAsRegularUser`
+- `user_with_permissions_can_see_add_users`
+- `user_without_permissions_cannot_see_add_users`
+- `user_with_permissions_can_store_users`
+- `user_without_permissions_cannot_store_users`
+- `user_with_permissions_can_destroy_users`
+- `user_without_permissions_cannot_destroy_users`
+- `user_with_permissions_can_see_edit_users`
+- `user_without_permissions_cannot_see_edit_users`
+- `user_with_permissions_can_update_users`
+- `user_without_permissions_cannot_update_users`
+- `user_with_permissions_can_manage_users`
+- `regular_users_cannot_manage_users`
+- `guest_users_cannot_manage_users`
+- `superadmins_can_manage_users`
+
+## 🚀 **Rutes Implementades**
+- Rutes de `users/manage` per al CRUD d'usuaris, amb middleware adequat.
+- L'accés està protegit amb el middleware `can:manage_users`.
+
+## 📜 **Documentació Markdown**
+- Afegida informació de l’sprint a `resources/markdown/terms.md`.
+
+## 🛡 **Verificació de Codi**
+- S'ha revisat tot el codi amb **Larastan** per garantir qualitat i seguretat.
+- S'ha executat `php artisan test` per validar el correcte funcionament de totes les funcionalitats.
+

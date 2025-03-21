@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\UsersManagerController;
 use App\Http\Controllers\VideosController;
 use App\Http\Controllers\VideosManagerController;
 use Illuminate\Support\Facades\Route;
@@ -34,3 +36,26 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/videos/{id}', [VideosController::class, 'show'])->name('videos.show');
+
+// Rutes per la gestió d'usuaris
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('users/manage')->middleware('can:manage-users')->group(function () {
+        Route::get('/', [UsersManagerController::class, 'index'])->name('users.manage.index');
+        Route::get('/create', [UsersManagerController::class, 'create'])->name('users.create');
+        Route::post('/', [UsersManagerController::class, 'store'])->name('users.store');
+        Route::get('/{user}/edit', [UsersManagerController::class, 'edit'])->name('users.edit');
+        Route::get('/{user}/delete', [UsersManagerController::class, 'delete'])->name('users.delete');
+        Route::put('/{user}', [UsersManagerController::class, 'update'])->name('users.update');
+        Route::delete('/{user}', [UsersManagerController::class, 'destroy'])->name('users.destroy');
+    });
+});
+
+// Ruta per veure un usuari específic
+Route::middleware(['auth'])->group(function () {
+    Route::get('/users/{user}', [UsersController::class, 'show'])->name('users.show');
+});
+
+// Ruta per veure l'índex d'usuaris
+Route::middleware(['auth'])->group(function () {
+    Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+});

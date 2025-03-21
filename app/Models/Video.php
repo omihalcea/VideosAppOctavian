@@ -22,6 +22,7 @@ class Video extends Model
         'previous',
         'next',
         'series_id',
+        'user_id',
     ];
 
     /**
@@ -73,5 +74,10 @@ class Video extends Model
         }
 
         return asset('images/default-thumbnail.jpg'); // Miniatura per defecte
+    }
+
+    public function setUser()
+    {
+        return $this->belongsTo(User::class);
     }
 }

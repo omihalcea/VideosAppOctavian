@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\User;
 use App\Models\Video;
 use Carbon\Carbon;
 
@@ -12,6 +13,8 @@ class VideoHelpers
      */
     public static function createVideos()
     {
+        $user = User::first();
+
         // Crear 3 vídeos per defecte
         Video::create([
             'title' => 'Kled VS Renekton',
@@ -21,6 +24,7 @@ class VideoHelpers
             'previous' => null,
             'next' => 2,
             'series_id' => 1,
+            'user_id' => $user->id,
         ]);
 
         Video::create([
@@ -31,6 +35,7 @@ class VideoHelpers
             'previous' => 1,
             'next' => 3,
             'series_id' => 1,
+            'user_id' => $user->id,
         ]);
 
         Video::create([
@@ -41,6 +46,7 @@ class VideoHelpers
             'previous' => 2,
             'next' => null,
             'series_id' => 1,
+            'user_id' => $user->id,
         ]);
     }
 }

@@ -17,6 +17,7 @@
                         <div class="card-body">
                             <h5 class="card-title" data-qa="video-title">{{ $video->title }}</h5>
                             <p class="card-text text-muted">{{ $video->created_at->format('d/m/Y') }}</p>
+                            <p>{{ $video->user_id }}</p>
                             <a href="{{ route('videos.show', $video->id) }}" class="btn btn-primary btn-sm" data-qa="btn-view-video">Veure Vídeo</a>
                         </div>
                     </div>

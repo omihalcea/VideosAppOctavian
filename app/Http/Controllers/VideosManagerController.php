@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VideosManagerController extends Controller
 {
@@ -34,6 +35,7 @@ class VideosManagerController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'url' => $request->url,
+            'user_id' => Auth::id(), // Assignar l'ID de l'usuari autenticat
             'published_at' => now(), // Assignar automàticament la data de publicació
             'previous' => $lastVideo ? $lastVideo->id : null, // Assignar el vídeo anterior
             'next' => null, // De moment, no té següent vídeo

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('previous')->nullable();
             $table->string('next')->nullable();
             $table->string('series_id')->nullable();
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

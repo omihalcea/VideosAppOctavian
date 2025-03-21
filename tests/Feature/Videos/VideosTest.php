@@ -35,6 +35,7 @@ class VideosTest extends TestCase
             'description' => 'Video de test (Feature/Videos/VideosTest.php)',
             'url' => 'https://www.youtube.com/embed/8qk5M6HtFs0?si=gGn0PWx7tJEmMsEU',
             'published_at' => Carbon::now(),
+            'user_id' => User::factory()->create()->id,
         ]);
 
         // Simular una sol·licitud GET a la ruta del vídeo

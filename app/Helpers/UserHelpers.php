@@ -64,6 +64,9 @@ class UserHelpers extends TestCase
             'super_admin' => true,
         ]);
         self::add_personal_team($user);
+
+        $superAdminRole = Role::firstOrCreate(['name' => 'super_admin']);
+        $user->assignRole($superAdminRole);
         return $user;
     }
 
@@ -71,5 +74,8 @@ class UserHelpers extends TestCase
     {
         Permission::firstOrCreate(['name' => 'manage-videos']);
         Permission::firstOrCreate(['name' => 'manage-users']);
+
+        $superAdminRole = Role::firstOrCreate(['name' => 'super_admin']);
+        $superAdminRole->givePermissionTo('manage-users');
     }
 }

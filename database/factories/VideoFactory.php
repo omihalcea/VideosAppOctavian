@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use App\Models\Video;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -29,6 +30,7 @@ class VideoFactory extends Factory
             'series_id' => null,
             'created_at' => now(),
             'updated_at' => now(),
+            'user_id' => User::first()->id,
         ];
     }
 }
