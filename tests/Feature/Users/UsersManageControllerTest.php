@@ -44,7 +44,6 @@ class UsersManageControllerTest extends TestCase
     }
 
     // TESTS
-
     public function test_user_with_permissions_can_see_add_users()
     {
         $this->loginAsSuperAdmin();
