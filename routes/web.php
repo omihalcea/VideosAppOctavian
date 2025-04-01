@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\ApiMultimediaController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UsersManagerController;
 use App\Http\Controllers\VideosController;
 use App\Http\Controllers\VideosManagerController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
     return view('welcome');

@@ -25,7 +25,7 @@ class UserHelpers extends TestCase
         $user = User::create([
             'name' => 'Regular',
             'email' => 'regular@videosapp.com',
-            'password' => bcrypt('123456789'),
+            'password' => bcrypt('password'),
             'current_team_id' => null,
         ]);
 
@@ -40,7 +40,7 @@ class UserHelpers extends TestCase
         $user = User::create([
             'name' => 'Video Manager',
             'email' => 'videosmanager@videosapp.com',
-            'password' => bcrypt('123456789'),
+            'password' => bcrypt('password'),
             'current_team_id' => null,
         ]);
 
@@ -60,7 +60,7 @@ class UserHelpers extends TestCase
         $user = User::create([
             'name' => 'Super Admin',
             'email' => 'superadmin@videosapp.com',
-            'password' => bcrypt('123456789'),
+            'password' => bcrypt('password'),
             'super_admin' => true,
         ]);
         self::add_personal_team($user);
