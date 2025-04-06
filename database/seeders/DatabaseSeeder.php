@@ -29,8 +29,9 @@ class DatabaseSeeder extends Seeder
     {
         // Definir permisos
         $permissions = [
-            'manage_videos',
-            'manage_users',
+            'manage-videos',
+            'manage-users',
+            'manage-series',
         ];
 
         foreach ($permissions as $permission) {
@@ -43,9 +44,8 @@ class DatabaseSeeder extends Seeder
         $regularUserRole = Role::firstOrCreate(['name' => 'regular-user']);
 
         // Assignar permisos als rols
-        $superAdminRole->givePermissionTo(['manage_videos', 'manage_users']);
-        $videoManagerRole->givePermissionTo(['manage_videos']);
-        // El regular user no té permisos especials
+        $superAdminRole->givePermissionTo(['manage-videos', 'manage-users', 'manage-series']);
+        $videoManagerRole->givePermissionTo(['manage-videos']);
     }
 
 

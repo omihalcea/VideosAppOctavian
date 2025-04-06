@@ -18,15 +18,23 @@ class ApiMultimediaController extends Controller
 
     public function store(Request $request)
     {
+        \Log::info('Petició rebuda a store()', ['request' => $request->all()]);
+
         $request->validate([
-            'file' => 'required|file|mimes:jpg,jpeg,png,mp4|max:51200',
+            'file' => 'required|max:51200',
         ]);
 
-        $user = Auth::user();
+        if (!$request->hasFile('file')) {
+            return response()->json(['error' => 'No file uploaded'], 422);
+        }
+
         $path = $request->file('file')->store('uploads', 'public');
 
         $file = Multimedia::create([
-            'user_id' => $user->id,
+            'user_id' => auth()->id(),
+            'filename' => $request->file('file')->getClientOriginalName(),
+            'type' => $request->file('file')->getClientMimeType(),
+            'size' => $request->file('file')->getSize(),
             'path' => $path,
         ]);
 

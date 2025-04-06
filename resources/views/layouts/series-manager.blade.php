@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Gestió de Vídeos')</title>
+    <title>@yield('title', 'Gestió de Series')</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
     <style>
@@ -25,10 +25,10 @@
             <ul class="navbar-nav ms-auto">
                 @auth
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('videos.index') }}">Llistat de Vídeos</a>
+                        <a class="nav-link" href="{{ route('series.index') }}">Llistat de Sèries</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('manage.index') }}">Gestió de Vídeos</a>
+                        <a class="nav-link" href="{{ route('series.manage.index') }}">Gestió de Sèries</a>
                     </li>
                 @endauth
                 @guest
@@ -53,7 +53,7 @@
 </main>
 
 <footer class="bg-dark text-white text-center py-3 mt-4">
-    &copy; {{ date('Y') }} Gestió de Vídeos
+    &copy; {{ date('Y') }} Gestió de Sèries
 </footer>
 </body>
 </html>

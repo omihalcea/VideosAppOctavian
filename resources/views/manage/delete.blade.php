@@ -4,7 +4,7 @@
     <div class="container">
         <h1>Eliminar Vídeo</h1>
 
-        @can('manage_videos')
+        @auth
             <p>Estàs segur que vols eliminar el vídeo: <strong data-qa="video-title">{{ $video->title }}</strong>?</p>
 
             <form action="{{ route('manage.destroy', $video->id) }}" method="POST" data-qa="form-delete-video">
@@ -15,6 +15,6 @@
             </form>
         @else
             <p>No tens permís per eliminar aquest vídeo.</p>
-        @endcan
+        @endauth
     </div>
 @endsection

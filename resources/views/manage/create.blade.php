@@ -6,7 +6,7 @@
     <div class="container">
         <h1>Afegir Nou Vídeo</h1>
 
-        @can('manage_videos')
+        @auth
             <form action="{{ route('manage.store') }}" method="POST" data-qa="form-create-video">
                 @csrf
 
@@ -29,6 +29,6 @@
             </form>
         @else
             <p>No tens permís per afegir vídeos.</p>
-        @endcan
+        @endauth
     </div>
 @endsection

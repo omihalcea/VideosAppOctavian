@@ -4,7 +4,7 @@
     <div class="container">
         <h1>Editar Vídeo</h1>
 
-        @can('manage_videos')
+        @auth
             <form action="{{ route('manage.update', $video->id) }}" method="POST" data-qa="form-edit-video">
                 @csrf
                 @method('PUT')
@@ -24,7 +24,7 @@
             </form>
         @else
             <p>No tens permís per editar aquest vídeo.</p>
-        @endcan
+        @endauth
 
         <h2 class="mt-4">Llista de Vídeos</h2>
         <table class="table" data-qa="videos-table">

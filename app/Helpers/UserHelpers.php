@@ -48,9 +48,11 @@ class UserHelpers extends TestCase
         $user->update(['current_team_id' => $team->id]);
 
         // Assignem el rol i permisos
-        $videoManagerRole = Role::firstOrCreate(['name' => 'video_manager']);
+        $videoManagerRole = Role::firstOrCreate(['name' => 'video-manager']);
         $user->assignRole($videoManagerRole);
 
+        $permission = Permission::firstOrCreate(['name' => 'manage-series']);
+        $videoManagerRole->givePermissionTo($permission);
 
         return $user;
     }
@@ -65,8 +67,12 @@ class UserHelpers extends TestCase
         ]);
         self::add_personal_team($user);
 
-        $superAdminRole = Role::firstOrCreate(['name' => 'super_admin']);
+        $superAdminRole = Role::firstOrCreate(['name' => 'super-admin']);
         $user->assignRole($superAdminRole);
+
+        $permissions = Permission::all();
+        $superAdminRole->givePermissionTo($permissions);
+
         return $user;
     }
 
@@ -74,8 +80,12 @@ class UserHelpers extends TestCase
     {
         Permission::firstOrCreate(['name' => 'manage-videos']);
         Permission::firstOrCreate(['name' => 'manage-users']);
+        Permission::firstOrCreate(['name' => 'manage-series']);
 
         $superAdminRole = Role::firstOrCreate(['name' => 'super_admin']);
-        $superAdminRole->givePermissionTo('manage-users');
+        $superAdminRole->givePermissionTo('manage-users', 'manage-videos', 'manage-series');
+
+        $videoManagerRole = Role::firstOrCreate(['name' => 'video-manager']);
+        $videoManagerRole->givePermissionTo('manage-videos', 'manage-series');
     }
 }
