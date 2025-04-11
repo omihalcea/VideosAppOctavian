@@ -13,6 +13,8 @@ return new class extends Migration {
         Schema::create('multimedia', function (Blueprint $table) {
             $table->id();
             $table->string('filename');
+            $table->string('display_name');
+            $table->text('description');
             $table->string('path');
             $table->enum('type', ['image', 'video']);
             $table->bigInteger('size')->nullable();

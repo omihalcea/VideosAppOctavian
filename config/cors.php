@@ -6,11 +6,11 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:8100'],
+    'allowed_origins' => ['*'],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => ['*'],
 
-    'allowed_headers' => ['Content-Type, Accept, Authorization, X-Requested-With, X-CSRF-TOKEN'],
+    'allowed_headers' => ['*'],
 
     'exposed_headers' => [],
 

@@ -13,15 +13,14 @@ class Multimedia extends Model
 
     protected $fillable = [
         'filename',
+        'display_name',
+        'description',
         'path',
         'type', // image, video
         'size',
         'user_id',
     ];
 
-    /**
-     * Relació amb l'usuari que ha pujat el fitxer.
-     */
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -11,39 +11,77 @@ class ApiMultimediaController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-        $files = Multimedia::where('user_id', $user->id)->get();
+        $files = Multimedia::with('user')->orderBy('created_at', 'desc')->get();
         return response()->json($files);
     }
 
-    public function store(Request $request)
+    public function profile()
     {
-        \Log::info('Petició rebuda a store()', ['request' => $request->all()]);
-
-        $request->validate([
-            'file' => 'required|max:51200',
-        ]);
-
-        if (!$request->hasFile('file')) {
-            return response()->json(['error' => 'No file uploaded'], 422);
-        }
-
-        $path = $request->file('file')->store('uploads', 'public');
-
-        $file = Multimedia::create([
-            'user_id' => auth()->id(),
-            'filename' => $request->file('file')->getClientOriginalName(),
-            'type' => $request->file('file')->getClientMimeType(),
-            'size' => $request->file('file')->getSize(),
-            'path' => $path,
-        ]);
-
-        return response()->json($file, 201);
+        $user = Auth::user();
+        $files = Multimedia::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        return response()->json($files);
     }
 
     public function show($id)
     {
         $file = Multimedia::findOrFail($id);
+        return response()->json($file);
+    }
+
+    public function store(Request $request)
+    {
+        $uploadedFile = $request->file('file');
+        $mimeType = $uploadedFile->getClientMimeType();
+
+        $fileType = 'document';
+        if (str_starts_with($mimeType, 'image/')) {
+            $fileType = 'image';
+        } elseif (str_starts_with($mimeType, 'video/')) {
+            $fileType = 'video';
+        }
+
+        $fileName = $uploadedFile->getClientOriginalName();
+        $path = $uploadedFile->storeAs('uploads', $fileName, 'public');
+
+        try {
+            $file = Multimedia::create([
+                'user_id' => auth()->id(),
+                'filename' => $fileName,
+                'display_name' => $request->input('name', pathinfo($fileName, PATHINFO_FILENAME)),
+                'description' => $request->input('description'),
+                'type' => $fileType,
+                'size' => $uploadedFile->getSize(),
+                'path' => $path,
+            ]);
+
+            return response()->json($file, 201);
+
+        } catch (\Exception $e) {
+            if (isset($path)) {
+                Storage::disk('public')->delete($path);
+            }
+
+            return response()->json([
+                'error' => 'Error al pujar el fitxer',
+                'details' => env('APP_DEBUG') ? $e->getMessage() : null
+            ], 500);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'display_name' => 'sometimes|string|max:255',
+            'description' => 'nullable|string'
+        ]);
+
+        $file = Multimedia::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+
+        $file->update([
+            'display_name' => $request->input('display_name', $file->display_name),
+            'description' => $request->input('description', $file->description)
+        ]);
+
         return response()->json($file);
     }
 
