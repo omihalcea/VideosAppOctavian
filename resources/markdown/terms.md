@@ -256,3 +256,58 @@ S'ha creat el controlador `UsersManageController` amb les següents funcions:
 - S'ha revisat tot el codi amb **Larastan** per garantir qualitat i seguretat.
 - S'ha executat `php artisan test` per validar el correcte funcionament de totes les funcionalitats.
 
+## Creació de series (Sprint 6)
+
+Durant l'Sprint 6 ens hem centrat en crear series i la seva implementació al projecte.
+
+## Permisos i Rols
+
+1. **Spatie Permissions:**
+    - S'ha integrat la llibreria `spatie/laravel-permission` per gestionar rols i permisos de forma estructurada.
+    - S'ha creat el rol: `manage-series`.
+
+2. **Helpers per a usuaris:**
+    - S'ha creat `UserHelpers` per generar fàcilment usuaris amb els rols assignats.
+    - Cada rol es crea amb les seves respectives funcions:
+        - `create_superadmin_user()`
+        - `create_video_manager_user()`
+        - `create_regular_user()`
+
+3. **Assignació de permisos:**
+    - El `super-admin` rep **tots els permisos automàticament**.
+    - Els `video-managers` tenen permisos específics per gestionar sèries i vídeos.
+    - Els `series-managers` poden gestionar sèries.
+    - Els `regular-users` no tenen permisos especials.
+
+## Gestió de Sèries
+
+1. **Controlador `SeriesManageController`:**
+    - Permet accedir a accions com crear, editar, eliminar i actualitzar sèries.
+    - Aquestes accions estan protegides mitjançant permisos.
+
+2. **Restriccions d'accés:**
+    - S’han afegit middleware de permisos a les rutes i controladors.
+    - Només usuaris amb permisos poden veure o gestionar les sèries.
+
+## Tests de Funcionalitat
+
+1. **Tests d’autenticació i autorització:**
+    - S’han escrit diversos tests per assegurar que:
+        - Els `super-admins` i `video-managers` poden accedir a la gestió de sèries.
+        - Els `regular-users` i convidats tenen accés restringit i reben errors 403 o redireccions.
+
+2. **Cobertura de casos:**
+    - Tests per accedir a les vistes de creació i edició.
+    - Tests per desar, eliminar i actualitzar sèries.
+    - Tests que comproven si un usuari sense permisos pot accedir (i fallar correctament).
+
+## Millores i Refactors
+
+1. **Validació de rutes protegides:**
+    - S’han identificat i corregit rutes que redirigien (302) en lloc de retornar errors 403, diferenciant entre convidats i usuaris registrats sense permisos.
+
+2. **Neteja de comentaris:**
+    - S’ha netejat el codi de comentaris innecessaris dins dels tests, mantenint només els comentaris explicatius generals.
+
+3. **Correcció d’errors Larastan:**
+    - S’ha solucionat l’error relacionat amb la propietat `profile_photo_url` definint correctament el getter o afegint el trait corresponent.
