@@ -17,6 +17,7 @@
     <div class="container">
         <a class="navbar-brand" href="{{ route('users.index') }}">Gestió d'Usuaris</a>
         <a class="navbar-brand" href="{{ route('videos.index') }}">Gestió de Vídeos</a>
+        <a class="navbar-brand" href="{{ route('series.index') }}">Gestió de Sèries</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>

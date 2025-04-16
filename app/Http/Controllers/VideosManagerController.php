@@ -35,10 +35,10 @@ class VideosManagerController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'url' => $request->url,
-            'user_id' => Auth::id(), // Assignar l'ID de l'usuari autenticat
-            'published_at' => now(), // Assignar automàticament la data de publicació
-            'previous' => $lastVideo ? $lastVideo->id : null, // Assignar el vídeo anterior
-            'next' => null, // De moment, no té següent vídeo
+            'user_id' => Auth::id(),
+            'published_at' => now(),
+            'previous' => $lastVideo ? $lastVideo->id : null,
+            'next' => null,
         ]);
 
         // Actualitzar el camp 'next' del vídeo anterior (si n'hi havia)

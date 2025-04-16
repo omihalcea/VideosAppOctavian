@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Video extends Model
 {
@@ -80,4 +81,19 @@ class Video extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Relació 1:N inversa -> Un vídeo pertany a una sèrie
+     */
+    public function series(): BelongsTo
+    {
+        return $this->belongsTo(Series::class);
+    }
+
+    public function setSeriesIdAttribute($value)
+    {
+        $this->attributes['series_id'] = $value === '' ? null : $value;
+    }
+
+
 }
