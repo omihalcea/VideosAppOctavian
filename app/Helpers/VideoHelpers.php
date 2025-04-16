@@ -73,7 +73,7 @@ class VideoHelpers
             'published_at' => Carbon::now(),
             'previous' => 1,
             'next' => 3,
-            'series_id' => 2,
+            'series_id' => null,
             'user_id' => $user->id,
         ]);
 
@@ -84,7 +84,7 @@ class VideoHelpers
             'published_at' => Carbon::now(),
             'previous' => 2,
             'next' => null,
-            'series_id' => 3,
+            'series_id' => null,
             'user_id' => $user->id,
         ]);
     }

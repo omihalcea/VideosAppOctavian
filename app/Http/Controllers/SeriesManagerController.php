@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Series;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,10 +18,12 @@ class SeriesManagerController extends Controller
         return view('series.manage.index', compact('series'));
     }
 
-    public function create(Series $series)
+    public function create()
     {
-        return view('series.manage.create', compact('series'));
+        $videos = Video::whereNull('series_id')->get();
+        return view('series.manage.create', compact('videos'));
     }
+
 
     /**
      * Guardar una nova sèrie
@@ -43,7 +46,7 @@ class SeriesManagerController extends Controller
             $imageName = null;
         }
 
-        Series::create([
+        $series = Series::create([
             'title' => $request->title,
             'description' => $request->description,
             'image' => $imageName,
@@ -51,6 +54,10 @@ class SeriesManagerController extends Controller
             'user_photo_url' => $user->profile_photo_url ?? null,
             'published_at' => $request->published_at,
         ]);
+
+        if ($request->has('videos')) {
+            Video::whereIn('id', $request->videos)->update(['series_id' => $series->id]);
+        }
 
         // Redirigir amb un missatge de confirmació
         return redirect()->route('series.manage.index')->with('success', 'Sèrie creada correctament!');
@@ -89,6 +96,10 @@ class SeriesManagerController extends Controller
             $imagePath = $request->file('image')->storeAs('series/', $imageName, 'public');
 
             $series->image = $imageName;
+        }
+
+        if ($request->has('videos')) {
+            Video::whereIn('id', $request->videos)->update(['series_id' => $series->id]);
         }
 
         $series->save();

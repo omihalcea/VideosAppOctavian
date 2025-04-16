@@ -89,4 +89,11 @@ class Video extends Model
     {
         return $this->belongsTo(Series::class);
     }
+
+    public function setSeriesIdAttribute($value)
+    {
+        $this->attributes['series_id'] = $value === '' ? null : $value;
+    }
+
+
 }
