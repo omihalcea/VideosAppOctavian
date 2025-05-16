@@ -57,13 +57,13 @@ class ApiMultimediaController extends Controller
             return response()->json($file, 201);
 
         } catch (\Exception $e) {
-            if (isset($path)) {
+            if ($path) {
                 Storage::disk('public')->delete($path);
             }
 
             return response()->json([
                 'error' => 'Error al pujar el fitxer',
-                'details' => env('APP_DEBUG') ? $e->getMessage() : null
+                'details' => config('APP_DEBUG') ? $e->getMessage() : null
             ], 500);
         }
     }

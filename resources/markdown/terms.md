@@ -311,3 +311,152 @@ Durant l'Sprint 6 ens hem centrat en crear series i la seva implementació al pr
 
 3. **Correcció d’errors Larastan:**
     - S’ha solucionat l’error relacionat amb la propietat `profile_photo_url` definint correctament el getter o afegint el trait corresponent.
+
+    
+## Creacio de notificacions al crear nou video (Sprint 7)
+
+# Implementació de Notificacions en Temps Real a Laravel
+
+Aquest document resumeix el procés seguit per implementar notificacions en temps real a una aplicació Laravel, incloent esdeveniments, notificacions broadcast, enviament de correus i configuració de Pusher.
+
+---
+
+## 1. Creació de l’Event
+
+S’ha creat l’event `VideoCreated` per encapsular la lògica relacionada amb la creació d’un vídeo:
+
+
+---
+
+## 2. Creació de la Notificació
+
+Es va crear una notificació per ser enviada als administradors:
+
+```bash
+php artisan make:notification VideoCreatedNotification
+```
+
+**Exemples de canals:**
+- Base de dades
+- Broadcast (temps real)
+- Email
+
+---
+
+## 3. Configuració de Pusher
+
+Al fitxer `.env` s'han establert totes les variables d'entorn necessaries per establier connexio amb el mailtrap i el pusher.
+
+A `config/broadcasting.php` s'ha configurat el canal `pusher`:
+
+---
+
+## 4. Enviament de notificacions i correus
+
+Dins del mètode `store()` del controlador de vídeos:
+
+```php
+event(new VideoCreated($video));
+
+foreach ($admins as $admin) {
+    $admin->notify(new VideoCreatedNotification($video));
+}
+```
+
+---
+
+## 🧑‍💻 5. Listener per centralitzar la notificació
+
+```bash
+php artisan make:listener SendVideoCreatedNotification
+```
+
+A `SendVideoCreatedNotification.php`:
+
+```php
+public function handle(VideoCreated $event)
+{
+    $admins = User::where('super_admin', true)->get();
+    Notification::send($admins, new VideoCreatedNotification($event->video));
+}
+```
+
+---
+
+## 🗂️ 6. Emmagatzematge de notificacions a base de dades
+
+Migració creada per Laravel:
+
+```bash
+php artisan notifications:table
+php artisan migrate
+```
+
+La notificació implementa `toDatabase()` per a emmagatzemar informació útil:
+
+```php
+public function toDatabase($notifiable)
+{
+    return [
+        'title' => 'Nou vídeo creat',
+        'message' => 'S’ha afegit un nou vídeo: ' . $this->video->title,
+        'video_id' => $this->video->id,
+        'video_url' => $this->video->url,
+        'video_thumbnail' => $this->video->thumbnail_url,
+    ];
+}
+```
+
+---
+
+## 🖼️ 7. Visualització de notificacions
+
+A la vista `notifications.blade.php` es mostren notificacions amb miniatura i enllaç al vídeo:
+
+```blade
+<img src="https://img.youtube.com/vi/{{ $videoId }}/0.jpg" alt="Miniatura">
+<a href="{{ url('/videos/' . $videoId) }}">Veure vídeo</a>
+```
+
+---
+
+## 📡 8. Rebre notificacions en temps real al navegador
+
+Client JavaScript configurat amb Laravel Echo i Pusher:
+
+```javascript
+Echo.private(`App.Models.User.${userId}`)
+    .notification((notification) => {
+        // Mostrar notificació a la pàgina
+    });
+```
+
+---
+
+## ✅ 9. Tests automatitzats
+
+S’han afegit tests per verificar:
+
+- Que es dispara l’event `VideoCreated`
+- Que es notifica l’usuari administrador amb `VideoCreatedNotification`
+
+```php
+Event::assertDispatched(VideoCreated::class);
+Notification::assertSentTo([$admin], VideoCreatedNotification::class);
+```
+
+---
+
+## 📬 10. Enviament de correus
+
+El canal `mail` envia un correu automàtic als administradors quan es crea un vídeo nou, amb un enllaç al vídeo.
+
+---
+
+## 🔄 11. Notes addicionals
+
+- Les notificacions es guarden un cop a base de dades (evitant duplicats)
+- Larastan ha estat utilitzat per validar l'estructura del codi
+- S’ha afegit PHPDoc als models per ajudar l’anàlisi estàtica
+
+---

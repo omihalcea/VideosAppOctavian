@@ -4,6 +4,11 @@
 
 @section('content')
     <div class="container">
+
+        <div class="mb-3">
+            <a href="{{ route('manage.create') }}" class="btn btn-success" data-qa="btn-add-video">Afegir Nou Vídeo</a>
+        </div>
+
         <h1 class="mb-4">Tots els Vídeos</h1>
 
         <div class="row">

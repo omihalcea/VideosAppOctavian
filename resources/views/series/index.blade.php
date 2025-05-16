@@ -4,6 +4,10 @@
     <div class="container">
         <h1 class="mb-4">Sèries disponibles</h1>
 
+        <div class="mb-3">
+            <a href="{{ route('series.manage.create') }}" class="btn btn-success" data-qa="btn-add-video">Crear nova serie</a>
+        </div>
+
         <form method="GET" action="{{ route('series.index') }}" class="mb-4">
             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
                    placeholder="Buscar sèries..." data-qa="input-search-series">

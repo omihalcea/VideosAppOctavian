@@ -1,7 +1,7 @@
 @extends('layouts.series-manager')
 
 @section('content')
-    @can('manage-series')
+    @auth
         <h1>Crear nova sèrie</h1>
         <form action="{{ route('series.manage.store') }}" method="POST" enctype="multipart/form-data" data-qa="form-create-series">
             @csrf
@@ -34,5 +34,5 @@
         </form>
     @else
         <p>No tens permís per crear sèries.</p>
-    @endcan
+    @endauth
 @endsection

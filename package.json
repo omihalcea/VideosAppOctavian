@@ -9,7 +9,7 @@
         "@tailwindcss/forms": "^0.5.7",
         "@tailwindcss/typography": "^0.5.10",
         "autoprefixer": "^10.4.16",
-        "axios": "^1.7.4",
+        "axios": "^1.9.0",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.0",
         "postcss": "^8.4.32",
@@ -17,8 +17,11 @@
         "vite": "^5.0"
     },
     "dependencies": {
+        "@pusher/push-notifications-web": "^1.1.0",
         "filepond": "^4.32.7",
         "filepond-plugin-file-validate-type": "^1.2.9",
+        "laravel-echo": "^2.1.0",
+        "pusher-js": "^8.4.0",
         "vue-filepond": "^7.0.4"
     }
 }

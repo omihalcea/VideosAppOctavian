@@ -14,6 +14,7 @@ class MultimediaTest extends TestCase
     use RefreshDatabase;
 
     protected $user;
+    protected $user2;
     protected $file;
 
     protected function setUp(): void

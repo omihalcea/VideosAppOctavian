@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\ApiMultimediaController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\SeriesManagerController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UsersManagerController;
 use App\Http\Controllers\VideosController;
 use App\Http\Controllers\VideosManagerController;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,10 +30,12 @@ Route::middleware([
 
 // Grup de rutes protegides per autenticació i permisos per a la gestió de vídeos
 Route::middleware(['auth'])->group(function () {
-    Route::prefix('videos/manage')->middleware('auth')->group(function () {
-        Route::get('/', [VideosManagerController::class, 'index'])->name('manage.index');
+    Route::prefix('videos/manage')->group(function () {
         Route::get('/create', [VideosManagerController::class, 'create'])->name('manage.create');
         Route::post('/', [VideosManagerController::class, 'store'])->name('manage.store');
+    });
+    Route::prefix('videos/manage')->middleware('can:manage-videos')->group(function () {
+        Route::get('/', [VideosManagerController::class, 'index'])->name('manage.index');
         Route::get('/{video}/edit', [VideosManagerController::class, 'edit'])->name('manage.edit');
         Route::get('/{video}/delete', [VideosManagerController::class, 'delete'])->name('manage.delete');
         Route::put('/{video}', [VideosManagerController::class, 'update'])->name('manage.update');
@@ -56,11 +60,12 @@ Route::middleware(['auth'])->group(function () {
 
 // Rutes per ala gestió de les series
 Route::middleware(['auth'])->group(function () {
-
-    Route::prefix('series/manage')->middleware(['can:manage-series'])->group(function () {
-        Route::get('/', [SeriesManagerController::class, 'index'])->name('series.manage.index');
+    Route::prefix('series/manage')->group(function () {
         Route::get('/create', [SeriesManagerController::class, 'create'])->name('series.manage.create');
         Route::post('/', [SeriesManagerController::class, 'store'])->name('series.manage.store');
+    });
+    Route::prefix('series/manage')->middleware(['can:manage-series'])->group(function () {
+        Route::get('/', [SeriesManagerController::class, 'index'])->name('series.manage.index');
         Route::get('/{series}/edit', [SeriesManagerController::class, 'edit'])->name('series.manage.edit');
         Route::put('/{series}', [SeriesManagerController::class, 'update'])->name('series.manage.update');
         Route::get('/{series}/delete', [SeriesManagerController::class, 'delete'])->name('series.manage.delete');
@@ -80,3 +85,10 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/users', [UsersController::class, 'index'])->name('users.index');
 });
+
+// Ruta per veure les notificacions
+Route::middleware(['auth'])->group(function () {
+    Route::get('/notificacions', [NotificationController::class, 'index'])->name('notifications.view');
+});
+
+Broadcast::routes(['middleware' => ['auth']]);

@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\VideoCreated;
+use App\Models\User;
 use App\Models\Video;
+use App\Notifications\VideoCreatedNotification;
+use Faker\Guesser\Name;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class VideosManagerController extends Controller
 {
@@ -41,12 +46,15 @@ class VideosManagerController extends Controller
             'next' => null,
         ]);
 
+        // Disparar l’event
+        event(new VideoCreated($video));
+
         // Actualitzar el camp 'next' del vídeo anterior (si n'hi havia)
         if ($lastVideo) {
             $lastVideo->update(['next' => $video->id]);
         }
 
-        return redirect()->route('manage.index')->with('success', 'Vídeo afegit correctament.');
+        return redirect()->route('videos.index')->with('success', 'Vídeo afegit correctament.');
     }
 
 
