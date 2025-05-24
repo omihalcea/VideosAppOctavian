@@ -1,39 +1,99 @@
-@extends('layouts.user-manager')
+@extends('layouts.manager-layout')
 
-@section('title', 'Llista d\'Usuaris')
+@section('title', 'Gestió d\'Usuaris')
 
 @section('content')
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-4xl font-bold text-gray-800">Llista d'Usuaris</h1>
-        <a href="{{ route('users.create') }}" class="btn btn-info">
-            + Crear Usuari
-        </a>
-    </div>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center content-spacing">
+            <h1>Gestió d'Usuaris</h1>
+            <x-button
+                href="{{ route('users.create') }}"
+                variant="success"
+                icon="person-plus"
+                data-qa="btn-create-user">
+                Crear Usuari
+            </x-button>
+        </div>
 
-    <table class="table table-striped" data-qa="users-table">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Correu Electrònic</th>
-            <th>Rol</th>
-            <th>Accions</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach ($users as $user)
-            <tr>
-                <td>{{ $user->id }}</td>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td>{{ $user->getRoleNames()->first() ?? 'Sense rol' }}</td>
-                <td>
-                    <a href="{{ route('users.show', $user->id) }}" class="btn btn-info" data-qa="view-user-button">Veure</a>
-                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning" data-qa="edit-user-button">Editar</a>
-                    <a href="{{ route('users.delete', $user->id) }}" class="btn btn-danger" data-qa="delete-user-button">Eliminar</a>
-                </td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
+        @if($users->count() > 0)
+            <div class="table-responsive">
+                <table class="table table-striped" data-qa="users-table">
+                    <thead class="table-dark">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Correu Electrònic</th>
+                        <th scope="col">Rol</th>
+                        <th scope="col">Accions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach ($users as $user)
+                        <tr>
+                            <td class="fw-medium">{{ $user->id }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td class="text-muted">{{ $user->email }}</td>
+                            <td>
+                                @if($user->getRoleNames()->first())
+                                    <span class="badge bg-primary">{{ $user->getRoleNames()->first() }}</span>
+                                @else
+                                    <span class="badge bg-secondary">Sense rol</span>
+                                @endif
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <x-button
+                                        href="{{ route('users.show', $user->id) }}"
+                                        variant="info"
+                                        size="sm"
+                                        icon="eye"
+                                        data-qa="view-user-button">
+                                        Veure
+                                    </x-button>
+                                    <x-button
+                                        href="{{ route('users.edit', $user->id) }}"
+                                        variant="warning"
+                                        size="sm"
+                                        icon="pencil"
+                                        data-qa="edit-user-button">
+                                        Editar
+                                    </x-button>
+                                    <x-button
+                                        href="{{ route('users.delete', $user->id) }}"
+                                        variant="danger"
+                                        size="sm"
+                                        icon="trash"
+                                        data-qa="delete-user-button">
+                                        Eliminar
+                                    </x-button>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginació si és necessària -->
+            @if(method_exists($users, 'links'))
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $users->links() }}
+                </div>
+            @endif
+        @else
+            <x-empty-state
+                icon="people"
+                title="No hi ha usuaris per gestionar"
+                description="No hi ha usuaris disponibles per gestionar al sistema.">
+                <x-slot name="action">
+                    <x-button
+                        href="{{ route('users.create') }}"
+                        variant="success"
+                        icon="person-plus">
+                        Crear Primer Usuari
+                    </x-button>
+                </x-slot>
+            </x-empty-state>
+        @endif
+    </div>
 @endsection

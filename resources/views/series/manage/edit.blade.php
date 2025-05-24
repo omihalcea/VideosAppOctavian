@@ -1,4 +1,4 @@
-@extends('layouts.series-manager')
+@extends('layouts.manager-layout')
 
 @section('content')
     @can('manage-series')

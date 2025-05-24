@@ -28,7 +28,6 @@ class VideosController extends Controller // Assegura't que estén Controller
         return view('videos.index', compact('videos'));
     }
 
-
     /**
      * Mostrar un vídeo específic.
      *
@@ -37,8 +36,8 @@ class VideosController extends Controller // Assegura't que estén Controller
      */
     public function show($id)
     {
-        // Obtenir el vídeo pel seu ID
-        $video = Video::findOrFail($id);
+        // Obtenir el vídeo pel seu ID amb les relacions necessàries
+        $video = Video::with(['user', 'series'])->findOrFail($id);
 
         // Retornar la vista amb el vídeo
         return view('videos.show', compact('video'));

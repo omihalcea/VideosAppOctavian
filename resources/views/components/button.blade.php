@@ -1,3 +1,45 @@
-<button {{ $attributes->merge(['type' => 'submit', 'class' => 'inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 transition ease-in-out duration-150']) }}>
-    {{ $slot }}
-</button>
+@props([
+    'variant' => 'primary',
+    'size' => 'md',
+    'type' => 'button',
+    'href' => null,
+    'icon' => null
+])
+
+@php
+    $baseClasses = 'btn fw-medium d-inline-flex align-items-center justify-content-center text-decoration-none border-0 transition-all';
+
+    $variants = [
+        'primary' => 'btn-primary-custom',
+        'secondary' => 'btn-secondary-custom',
+        'success' => 'btn-success-custom',
+        'danger' => 'btn-danger-custom',
+        'warning' => 'btn-warning-custom',
+        'info' => 'btn-info-custom',
+        'outline' => 'btn-outline-custom'
+    ];
+
+    $sizes = [
+        'sm' => 'btn-sm-custom',
+        'md' => 'btn-md-custom',
+        'lg' => 'btn-lg-custom'
+    ];
+
+    $classes = $baseClasses . ' ' . ($variants[$variant] ?? $variants['primary']) . ' ' . ($sizes[$size] ?? $sizes['md']);
+@endphp
+
+@if($href)
+    <a href="{{ $href }}" {{ $attributes->merge(['class' => $classes]) }}>
+        @if($icon)
+            <i class="bi bi-{{ $icon }} me-2"></i>
+        @endif
+        {{ $slot }}
+    </a>
+@else
+    <button type="{{ $type }}" {{ $attributes->merge(['class' => $classes]) }}>
+        @if($icon)
+            <i class="bi bi-{{ $icon }} me-2"></i>
+        @endif
+        {{ $slot }}
+    </button>
+@endif

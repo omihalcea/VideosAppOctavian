@@ -1,41 +1,73 @@
-@extends('layouts.series-manager')
+@extends('layouts.manager-layout')
+
+@section('title', 'Llista de Sèries')
 
 @section('content')
     <div class="container">
-        <h1 class="mb-4">Sèries disponibles</h1>
-
-        <div class="mb-3">
-            <a href="{{ route('series.manage.create') }}" class="btn btn-success" data-qa="btn-add-video">Crear nova serie</a>
+        <div class="d-flex justify-content-between align-items-center content-spacing">
+            <h1>Sèries disponibles</h1>
+            <x-button
+                href="{{ route('series.manage.create') }}"
+                variant="success"
+                icon="plus-circle"
+                data-qa="btn-add-series">
+                Crear nova sèrie
+            </x-button>
         </div>
 
-        <form method="GET" action="{{ route('series.index') }}" class="mb-4">
-            <input type="text" name="search" value="{{ request('search') }}" class="form-control"
-                   placeholder="Buscar sèries..." data-qa="input-search-series">
+        <!-- Formulari de cerca -->
+        <form method="GET" action="{{ route('series.index') }}" class="content-spacing">
+            <div class="input-group">
+                <input type="text" name="search" value="{{ request('search') }}"
+                       class="form-control" placeholder="Buscar sèries..."
+                       data-qa="input-search-series">
+                <x-button type="submit" variant="primary" icon="search">Cercar</x-button>
+            </div>
         </form>
 
-        <div class="row">
-            @forelse ($series as $serie)
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100" data-qa="card-serie">
-                        @if ($serie->image)
-                            <img src="{{ asset('storage/series/' . $serie->image) }}" class="card-img-top"
-                                 alt="{{ $serie->title }}" data-qa="card-serie-image">
-                        @endif
-                        <div class="card-body">
-                            <h5 class="card-title" data-qa="card-serie-title">{{ $serie->title }}</h5>
-                            <p class="card-text">{{ Str::limit($serie->description, 100) }}</p>
-                            <a href="{{ route('series.show', $serie->id) }}" class="btn btn-primary"
-                               data-qa="btn-view-serie">Veure vídeos</a>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <p class="text-muted">No s’han trobat sèries.</p>
-            @endforelse
-        </div>
+        @if($series->count() > 0)
+            <div class="grid-container">
+                @foreach ($series as $serie)
+                    <x-card
+                        title="{{ $serie->title }}"
+                        image="{{ $serie->image ? asset('storage/series/' . $serie->image) : null }}"
+                        imageAlt="{{ $serie->title }}"
+                        data-qa="card-serie">
 
-        <div class="mt-4">
-            {{ $series->withQueryString()->links() }}
-        </div>
+                        <p class="card-text">{{ Str::limit($serie->description, 100) }}</p>
+
+                        <x-slot name="actions">
+                            <x-button
+                                href="{{ route('series.show', $serie->id) }}"
+                                variant="primary"
+                                size="sm"
+                                icon="collection-play"
+                                data-qa="btn-view-serie">
+                                Veure vídeos
+                            </x-button>
+                        </x-slot>
+                    </x-card>
+                @endforeach
+            </div>
+
+            <!-- Paginació -->
+            <div class="d-flex justify-content-center mt-4">
+                {{ $series->withQueryString()->links() }}
+            </div>
+        @else
+            <x-empty-state
+                icon="collection-play"
+                title="No hi ha sèries"
+                description="No s'han trobat sèries que coincideixin amb la cerca.">
+                <x-slot name="action">
+                    <x-button
+                        href="{{ route('series.manage.create') }}"
+                        variant="success"
+                        icon="plus-circle">
+                        Crear Primera Sèrie
+                    </x-button>
+                </x-slot>
+            </x-empty-state>
+        @endif
     </div>
 @endsection

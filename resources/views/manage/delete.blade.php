@@ -1,4 +1,4 @@
-@extends('layouts.video-manager')
+@extends('layouts.manager-layout')
 
 @section('content')
     <div class="container">

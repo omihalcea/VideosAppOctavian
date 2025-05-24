@@ -1,4 +1,4 @@
-@extends('layouts.video-manager')
+@extends('layouts.manager-layout')
 
 @section('title', 'Notificacions en temps real')
 

@@ -1,4 +1,4 @@
-@extends('layouts.user-manager')
+@extends('layouts.manager-layout')
 
 @section('title', 'Crear Usuari')
 

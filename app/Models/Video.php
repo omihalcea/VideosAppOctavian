@@ -45,7 +45,6 @@ class Video extends Model
             : null; // Retorna null si no està publicat
     }
 
-
     /**
      * Retorna la data de publicació en un format llegible per humans com "fa 2 hores".
      *
@@ -77,7 +76,55 @@ class Video extends Model
         return asset('images/default-thumbnail.jpg'); // Miniatura per defecte
     }
 
-    public function setUser()
+    /**
+     * Comprova si el vídeo és de YouTube.
+     */
+    public function getIsYoutubeAttribute(): bool
+    {
+        return str_contains($this->url, 'youtube.com') || str_contains($this->url, 'youtu.be');
+    }
+
+    /**
+     * Genera la URL d'embed per al vídeo.
+     */
+    public function getEmbedUrlAttribute(): string
+    {
+        // Patró per YouTube
+        preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $this->url, $matches);
+
+        if (!empty($matches[1])) {
+            return "https://www.youtube.com/embed/{$matches[1]}";
+        }
+
+        return $this->url;
+    }
+
+    /**
+     * Obtenir el vídeo anterior.
+     */
+    public function getPreviousVideoAttribute(): ?Video
+    {
+        if ($this->previous) {
+            return static::find($this->previous);
+        }
+        return null;
+    }
+
+    /**
+     * Obtenir el vídeo següent.
+     */
+    public function getNextVideoAttribute(): ?Video
+    {
+        if ($this->next) {
+            return static::find($this->next);
+        }
+        return null;
+    }
+
+    /**
+     * Relació: Un vídeo pertany a un usuari.
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -94,6 +141,4 @@ class Video extends Model
     {
         $this->attributes['series_id'] = $value === '' ? null : $value;
     }
-
-
 }
