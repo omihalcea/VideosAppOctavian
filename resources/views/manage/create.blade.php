@@ -125,26 +125,6 @@
                             </div>
 
                             <div class="col-md-4">
-                                <!-- Sèrie -->
-                                <div class="form-group mb-3">
-                                    <label for="series_id" class="form-label">
-                                        <i class="bi bi-collection-play me-1"></i>Sèrie
-                                    </label>
-                                    <select
-                                        name="series_id"
-                                        id="series_id"
-                                        class="form-select @error('series_id') is-invalid @enderror">
-                                        <option value="">Sense sèrie</option>
-                                        @foreach(\App\Models\Series::all() as $series)
-                                            <option value="{{ $series->id }}" {{ old('series_id') == $series->id ? 'selected' : '' }}>
-                                                {{ $series->title }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('series_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
 
                                 <!-- Data de publicació -->
                                 <div class="form-group mb-3">

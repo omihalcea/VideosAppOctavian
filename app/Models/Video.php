@@ -29,9 +29,13 @@ class Video extends Model
     /**
      * Els camps que són de tipus dates.
      *
-     * @var list<string>
+     * @var array<string>
      */
-    protected $dates = ['published_at'];
+    protected $casts = [
+        'published_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 
     /**
      * Retorna la data de publicació formatada com "13 de gener de 2025".
@@ -41,8 +45,8 @@ class Video extends Model
     public function getFormattedPublishedAtAttribute(): ?string
     {
         return $this->published_at
-            ? Carbon::parse($this->published_at)->locale('ca')->isoFormat('D [de] MMMM [de] YYYY')
-            : null; // Retorna null si no està publicat
+            ? $this->published_at->locale('ca')->isoFormat('D [de] MMMM [de] YYYY')
+            : null;
     }
 
     /**
@@ -52,7 +56,9 @@ class Video extends Model
      */
     public function getFormattedForHumansPublishedAtAttribute()
     {
-        return Carbon::parse($this->published_at)->locale('ca')->diffForHumans();
+        return $this->published_at
+            ? $this->published_at->locale('ca')->diffForHumans()
+            : null;
     }
 
     /**
@@ -62,7 +68,9 @@ class Video extends Model
      */
     public function getPublishedAtTimestampAttribute()
     {
-        return Carbon::parse($this->published_at)->timestamp;
+        return $this->published_at
+            ? $this->published_at->timestamp
+            : null;
     }
 
     public function getThumbnailUrlAttribute()
